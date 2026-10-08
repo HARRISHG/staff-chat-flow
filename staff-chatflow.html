@@ -145,8 +145,8 @@ ul.plain { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
         <li>Patient number <code>9999900001</code>: G3 returns <code>NOT_STAFF</code>, and G4 ends the chat. No lead is created.</li>
         <li>Today → pick the Demo Patient's visit → Visit done. The reply names the patient, and in the patient bot HELLO now returns <code>REVIEW_DUE</code>.</li>
         <li>Today → pick a number that isn't on the list → <code>NOT_FOUND</code> message, then back to the list.</li>
-        <li>Call list → pick a call-back request → Not interested → <code>BAD_REQUEST</code> message. Requests take only No answer, Call later or Done.</li>
-        <li>Call list → No answer → Tomorrow: the person leaves today's call list and comes back tomorrow.</li>
+        <li>Call list → pick a call-back request → 4 → <code>BAD_REQUEST</code> message. Requests take only 1, 2 or 3.</li>
+        <li>Call list → 1 (No answer) → 2 (Tomorrow): the person leaves today's call list and comes back tomorrow.</li>
         <li>Book for patient with a brand-new number: <code>NOT_REGISTERED</code> → name → <code>CREATED</code> → booked at the same time.</li>
         <li>Book for patient on a time that's already taken: it books anyway. Staff can double-book; patients can't.</li>
         <li>Find patient with <code>Demo</code>, then with <code>0001</code>. Both find the Demo Patient with their next visit.</li>
@@ -212,13 +212,13 @@ const FLOWS = [
    {id:"C1", kind:"api", name:"Call list", rows:[["action","S_CALLS"]], uses:"result, list_text, count",
      branches:[["LIST","C2"],["other","E1"]]},
    {id:"C2", kind:"ask", name:"Pick who you called", text:"Call list ({{count}}):\n\n{{list_text}}\n\nCall them, then reply with their number to log the result, or 0 for the menu.", save:"item_no", note:"Number validation. If the list is empty, it says: Nothing here right now.", branches:[["0","F1"],["any other number","C3"]]},
-   {id:"C3", kind:"ask", name:"Call result", text:"How did the call with no. {{item_no}} go?", buttons:["📵 No answer","⏰ Call later","✅ Done","🙅 Not interested","❌ Wrong number","🗑 Remove"], save:"outcome",
-     note:"Save the code, not the label: no_answer, call_later, done, not_interested, wrong_number, drop. Not interested, Wrong number and Remove take a new lead off the list as lost.",
-     branches:[["📵 No answer → no_answer","C4"],["⏰ Call later → call_later","C4"],["✅ Done → done","C5"],["🙅 Not interested → not_interested","C5"],["❌ Wrong number → wrong_number","C5"],["🗑 Remove → drop","C5"]]},
-   {id:"C4", kind:"ask", name:"When to try again", text:"When should we try again?", buttons:["Today","Tomorrow","In 2 days"], save:"retry", note:"Save the code: today, tomorrow, 2days.", next:"C5"},
+   {id:"C3", kind:"ask", name:"Call result", text:"How did the call with no. {{item_no}} go? Tap a number.\n\n1 · 📵 No answer\n2 · ⏰ Call later\n3 · ✅ Done\n4 · 🙅 Not interested\n5 · ❌ Wrong number\n6 · 🗑 Remove", buttons:["1","2","3","4","5","6"], save:"outcome",
+     note:"Save the answer as is. n8n turns 1 to 6 into the outcome. 4, 5 and 6 take a new lead off the list as lost. A call-back request takes only 1, 2 or 3.",
+     branches:[["1","C4"],["2","C4"],["3","C5"],["4","C5"],["5","C5"],["6","C5"]]},
+   {id:"C4", kind:"ask", name:"When to try again", text:"When should we try again? Tap a number.\n\n1 · Today\n2 · Tomorrow\n3 · In 2 days", buttons:["1","2","3"], save:"retry", note:"Save the answer as is. n8n turns 1 to 3 into today, tomorrow or in 2 days.", next:"C5"},
    {id:"C5", kind:"api", name:"Log the call", rows:[["action","S_CALL_LOG"],["item_no","{{item_no}}"],["outcome","{{outcome}}"],["retry","{{retry}}"]], uses:"result, name, next",
      note:"retry is ignored for Done, Not interested, Wrong number and Remove, so an old value from an earlier call does no harm.",
-     branches:[["LOGGED","say: Saved for {{name}} ✅ → C1"],["NOT_FOUND","say: That number isn't on the call list any more. → C1"],["BAD_REQUEST","say: For a call-back request, use No answer, Call later or Done. → C3"],["other","E1"]]}
+     branches:[["LOGGED","say: Saved for {{name}} ✅ → C1"],["NOT_FOUND","say: That number isn't on the call list any more. → C1"],["BAD_REQUEST","say: For a call-back request, use 1, 2 or 3. → C3"],["other","E1"]]}
  ]},
  { id:"book", title:"5 · Book for a patient", why:"For phone bookings and front-desk bookings. Staff also see times that are already taken and can double-book them; patients can't. A number the clinic hasn't seen is added as a patient first.", steps:[
    {id:"K1", kind:"ask", name:"Patient's number", text:"Patient's 10-digit mobile number?", save:"patient_phone", note:"Use the phone validation.", next:"K2"},
