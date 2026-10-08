@@ -1,0 +1,307 @@
+<title>PatientCurve Staff Chatflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Same system as the PatientCurve MVP Chatflows sheet, so both build sheets read alike. One reading column: setup, then one section per flow; each step is a row: ID, block type, what to put in it, where it goes next. Teal = n8n call, amber = what staff see, indigo = question. */
+:root {
+  --bg: #f3f6f5; --surface: #ffffff; --fg: #15221f; --muted: #586864; --line: #cfd9d6;
+  --api: #0e7a69; --api-soft: #e2f1ed; --say: #a8650a; --say-soft: #fbf0de; --ask: #4b55b5; --ask-soft: #eaebf8;
+  --bad: #b3261e; --bad-soft: #fbe7e5;
+  --display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1615; --surface: #17211f; --fg: #e4ecea; --muted: #97a7a3; --line: #2f3d3a;
+  --api: #43c3ac; --api-soft: #143430; --say: #e6a84a; --say-soft: #3a2c14; --ask: #a3abf2; --ask-soft: #23264a;
+  --bad: #f19a92; --bad-soft: #3d1c19; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1615; --surface: #17211f; --fg: #e4ecea; --muted: #97a7a3; --line: #2f3d3a;
+  --api: #43c3ac; --api-soft: #143430; --say: #e6a84a; --say-soft: #3a2c14; --ask: #a3abf2; --ask-soft: #23264a;
+  --bad: #f19a92; --bad-soft: #3d1c19; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 16px/1.5 var(--body); }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 64px; display: grid; gap: 28px; }
+h1 { font: 700 clamp(1.5rem, 3.4vw, 2.05rem)/1.15 var(--display); margin: 0; text-wrap: balance; }
+h2 { font: 600 1.3rem/1.25 var(--display); margin: 0; text-wrap: balance; }
+h3 { font: 600 1rem/1.3 var(--display); margin: 0; }
+.sub { margin: 6px 0 0; color: var(--muted); max-width: 68ch; }
+nav { display: flex; flex-wrap: wrap; gap: 8px; }
+nav a { font: 600 .85rem var(--body); color: var(--fg); text-decoration: none; border: 1px solid var(--line); background: var(--surface); padding: 5px 12px; border-radius: 999px; }
+nav a:hover, nav a:focus-visible { border-color: var(--api); outline: none; }
+section { display: grid; gap: 12px; scroll-margin-top: 16px; }
+.why { margin: 0; color: var(--muted); max-width: 70ch; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 10px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+code { font: .86em var(--mono); background: var(--bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+
+.kv { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.kv th { text-align: left; font: 600 .72rem var(--body); letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding: 4px 8px; }
+.kv td { padding: 3px 4px; border-top: 1px solid var(--line); vertical-align: top; }
+.kv td.note { color: var(--muted); font-size: .85rem; padding-left: 8px; }
+.cp { display: inline-flex; align-items: flex-start; gap: 6px; font: .85rem var(--mono); color: var(--fg); background: var(--bg); border: 1px solid transparent; border-radius: 5px; padding: 3px 7px; cursor: pointer; text-align: left; max-width: 100%; overflow-wrap: anywhere; }
+.cp:hover, .cp:focus-visible { border-color: var(--api); outline: none; }
+.cp.done { border-color: var(--api); background: var(--api-soft); }
+.cp svg, .ib svg { flex: none; width: 13px; height: 13px; margin-top: 2px; opacity: .55; }
+.cp:hover svg, .ib:hover svg { opacity: 1; }
+.cp.sm { font-size: .78rem; padding: 2px 6px; }
+.cp.pill { font: .85rem var(--body); border: 1px solid var(--say); color: var(--say); background: transparent; border-radius: 999px; padding: 2px 10px; }
+.cp.pill.done { background: var(--say-soft); }
+.cp.res-c { font-weight: 600; color: var(--api); }
+.ib { display: inline-flex; align-items: center; gap: 5px; font: 600 .75rem var(--body); color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; cursor: pointer; }
+.ib:hover, .ib:focus-visible { border-color: var(--api); color: var(--fg); outline: none; }
+.ib.done { border-color: var(--api); color: var(--api); }
+.bubwrap { display: grid; gap: 6px; justify-items: start; }
+.inline { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: .88rem; color: var(--muted); }
+#toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); font: 600 .85rem var(--body); padding: 6px 14px; border-radius: 999px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+#toast.on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+.tablewrap { overflow-x: auto; }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+li.step { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.sbody { display: grid; gap: 8px; min-width: 0; }
+.shead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.chip { font: 600 .7rem var(--body); letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+.c-say { color: var(--say); background: var(--say-soft); }
+.c-ask { color: var(--ask); background: var(--ask-soft); }
+.c-api { color: var(--api); background: var(--api-soft); }
+.bubble { white-space: pre-wrap; background: var(--say-soft); border-radius: 8px; padding: 8px 12px; font-size: .95rem; max-width: 60ch; }
+.buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+.save { font-size: .88rem; color: var(--muted); }
+.branches { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.branches td { padding: 4px 8px; border-top: 1px solid var(--line); vertical-align: top; }
+.branches td:first-child { white-space: nowrap; width: 1%; }
+.res { font: 600 .8rem var(--mono); color: var(--api); }
+.res.err { color: var(--bad); }
+.tip { border: 1px solid var(--say); background: var(--say-soft); border-radius: 10px; padding: 12px 14px; font-size: .95rem; }
+.tip b { font-family: var(--display); }
+.warn { border: 1px solid var(--bad); background: var(--bad-soft); border-radius: 10px; padding: 12px 14px; font-size: .95rem; display: grid; gap: 6px; }
+.warn b { font-family: var(--display); color: var(--bad); }
+ul.plain { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+@media (max-width: 520px) { li.step { grid-template-columns: 1fr; gap: 4px; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>PatientCurve staff chatflow</h1>
+    <p class="sub">Build sheet for a separate staff bot for Jai Dent, Kovilpatti in BotPenguin. It uses the same n8n webhook and the same block settings as the patient chatflow, so staff and patients work on the same data. Click any ID, label, variable, button text or message to copy it.</p>
+  </header>
+
+  <nav aria-label="Flows">
+    <a href="#setup">Setup</a>
+    <a href="#start">1 · Start</a>
+    <a href="#menu">2 · Staff menu</a>
+    <a href="#today">3 · Today</a>
+    <a href="#calls">4 · Call list</a>
+    <a href="#book">5 · Book for patient</a>
+    <a href="#walkin">6 · Walk-in</a>
+    <a href="#find">7 · Find patient</a>
+    <a href="#errors">8 · Errors</a>
+    <a href="#testing">Testing</a>
+  </nav>
+
+  <section id="setup">
+    <h2>Setup, once</h2>
+    <p class="why">Use the same API block settings as the patient bot. Every call sends the same first two rows; only <code>action</code> and a few extra rows change. <code>phone</code> is always the staff member's own number. When staff act for a patient, the patient's number goes in <code>patient_phone</code>.</p>
+    <div class="grid2">
+      <div class="panel">
+        <h3>API block settings</h3>
+        <div class="tablewrap"><table class="kv" id="settings"></table></div>
+      </div>
+      <div class="panel">
+        <h3>First two rows of every API call</h3>
+        <div class="tablewrap"><table class="kv" id="common"></table></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Manage API responses (save these after every call)</h3>
+      <p class="why">n8n always replies <code>{"result": "...", "data": {...}}</code>. Save these fields into bot variables; each step lists the ones it uses.</p>
+      <div class="tablewrap"><table class="kv" id="mapping"></table></div>
+    </div>
+    <div class="tip"><b>Staff act on rows by number.</b> Today's visits, the call list and search results arrive as numbered text in <code>{{list_text}}</code>. Staff reply with a row number (<code>item_no</code>), and n8n turns it back into the right visit or person. Today's list keeps done and no-show rows, so its numbers stay the same all day. The call list drops a person once they're logged as done, so its numbers shift: always pick from the list just shown.</div>
+  </section>
+
+  <div id="flows" style="display:grid;gap:28px"></div>
+
+  <section id="errors">
+    <h2>8 · Errors, used by every API block</h2>
+    <p class="why">Connect any reply that a step doesn't list to E1, so staff never get silence.</p>
+    <ol class="steps" id="errsteps"></ol>
+  </section>
+
+  <section id="testing">
+    <h2>Before you share it with staff</h2>
+    <div class="warn">
+      <b>Anyone who types a staff number gets the staff menu.</b>
+      <span>The web bot can't prove who is typing. Anyone who enters a staff mobile number sees today's patients, names and phone numbers. Until there is a PIN check, keep the staff bot's link private: don't put it on the website, and share it only with your team. A PIN needs a small change in n8n (a <code>pin</code> field on each staff record, checked by the router). WhatsApp fixes this on its own, because there the number comes from WhatsApp instead of being typed.</span>
+    </div>
+    <div class="panel">
+      <h3>Test checklist</h3>
+      <ul class="plain">
+        <li>Staff number <code>7094596877</code> (Harrish, owner): G3 returns <code>LIST</code> and you reach the menu.</li>
+        <li>Patient number <code>9999900001</code>: G3 returns <code>NOT_STAFF</code>, and G4 ends the chat. No lead is created.</li>
+        <li>Today → pick the Demo Patient's visit → Visit done. The reply names the patient, and in the patient bot HELLO now returns <code>REVIEW_DUE</code>.</li>
+        <li>Today → pick a number that isn't on the list → <code>NOT_FOUND</code> message, then back to the list.</li>
+        <li>Call list → pick a call-back request → Not interested → <code>BAD_REQUEST</code> message. Requests take only No answer, Call later or Done.</li>
+        <li>Call list → No answer → Tomorrow: the person leaves today's call list and comes back tomorrow.</li>
+        <li>Book for patient with a brand-new number: <code>NOT_REGISTERED</code> → name → <code>CREATED</code> → booked at the same time.</li>
+        <li>Book for patient on a time that's already taken: it books anyway. Staff can double-book; patients can't.</li>
+        <li>Find patient with <code>Demo</code>, then with <code>0001</code>. Both find the Demo Patient with their next visit.</li>
+        <li>Walk-in with an existing number → <code>EXISTS</code>, then the offer to book.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>How this differs from the staff menu inside the patient bot (section 9)</h3>
+      <ul class="plain">
+        <li><b>Separate bot.</b> Patients never see staff options, and you can keep its link private.</li>
+        <li><b>The entry check uses S_TODAY instead of HELLO.</b> HELLO turns any unknown number into a new lead. S_TODAY answers <code>NOT_STAFF</code> without creating anything, and it already returns today's count for the greeting.</li>
+        <li><b>Booking asks what the visit is for.</b> n8n already stores <code>treatment</code> on the appointment.</li>
+        <li><b>Search results lead somewhere.</b> Staff can book from the results or search again, instead of dropping back to the menu.</li>
+        <li><b>New Done button</b> to end the chat, plus explicit handling of <code>NOT_STAFF</code>.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const URL_ = "https://n8n-bnuy.srv2035396.hstgr.cloud/webhook/pc/inbound";
+const COMMON = [["clinic_id","CLN_JAIDENT_KVP"],["phone","{{phone}}"]];
+const MAP = [
+  ["result","{{result}}","every call"],
+  ["data.date_label","{{date_label}}","S_TODAY, SLOTS: e.g. Thu 8 Oct"],
+  ["data.count","{{count}}","S_TODAY, S_CALLS, S_FIND: number of rows"],
+  ["data.list_text","{{list_text}}","S_TODAY, S_CALLS, S_FIND: numbered rows"],
+  ["data.name","{{name}}","S_DONE, S_NOSHOW, S_CALL_LOG: who it was"],
+  ["data.next","{{next}}","S_CALL_LOG: when they come back on the list (later today, tomorrow, in 2 days)"],
+  ["data.days_text","{{days_text}}","SLOTS: numbered days"],
+  ["data.slots_text","{{slots_text}}","SLOTS: numbered times for one day"],
+  ["data.date","{{date}}","SLOTS: the day shown (send back with the slot number)"],
+  ["data.label","{{label}}","S_BOOK: e.g. Thu 8 Oct, 11:00 AM"]
+];
+
+/* Step kinds: say = message, ask = question/buttons, api = API block */
+const FLOWS = [
+ { id:"start", title:"1 · Start", why:"The staff member enters their number once. One S_TODAY call checks that the number belongs to active staff. A non-staff number is turned away, and nothing is saved for it.", steps:[
+   {id:"G1", kind:"say", name:"Welcome", text:"Hi! 👋 This is the Jai Dent staff assistant.\nI help you manage today's visits, calls and bookings.", next:"G2"},
+   {id:"G2", kind:"ask", name:"Staff phone", text:"Please enter your 10-digit staff mobile number.", save:"phone", note:"Use the phone validation. It is sent as phone in every API call.", next:"G3"},
+   {id:"G3", kind:"api", name:"Check staff", rows:[["action","S_TODAY"]], uses:"result, date_label, count",
+     branches:[["LIST","F1"],["NOT_STAFF","G4"],["other","E1"]]},
+   {id:"G4", kind:"say", name:"Not staff", text:"This number isn't registered as Jai Dent staff.\nPatients can book on our website chat. Staff: ask the clinic owner to add your number.", note:"End the chat after this message."}
+ ]},
+ { id:"menu", title:"2 · Staff menu", why:"Every flow comes back here. In BotPenguin, give this block a clear name so the other blocks can jump to it.", steps:[
+   {id:"F1", kind:"ask", name:"Staff menu", text:"Staff menu · {{date_label}}\n{{count}} visits on today's list.\nWhat would you like to do?", buttons:["📋 Today","📞 Call list","📅 Book for patient","🚶 Add walk-in","🔎 Find patient","✋ Done"],
+     note:"{{count}} is set by G3. After other steps it may be from an earlier call; that's fine for a greeting.",
+     branches:[["📋 Today","F2"],["📞 Call list","C1"],["📅 Book for patient","K1"],["🚶 Add walk-in","W1"],["🔎 Find patient","Q1"],["✋ Done","F9"]]},
+   {id:"F9", kind:"say", name:"Goodbye", text:"Thanks! Type Hi any time to open the staff menu again.", note:"End the chat."}
+ ]},
+ { id:"today", title:"3 · Today's visits", why:"Mark each visit done or no-show. Done starts the thank-you and review request. A no-show gets a rebooking message and appears on the call list.", steps:[
+   {id:"F2", kind:"api", name:"Today's appointments", rows:[["action","S_TODAY"]], uses:"result, list_text, date_label, count",
+     branches:[["LIST","F3"],["other","E1"]]},
+   {id:"F3", kind:"ask", name:"Pick a visit", text:"Today, {{date_label}}:\n\n{{list_text}}\n\nReply with a number to update that visit, or 0 for the menu.", save:"item_no", note:"Number validation.", branches:[["0","F1"],["any other number","F4"]]},
+   {id:"F4", kind:"ask", name:"What happened", text:"Visit no. {{item_no}}: what happened?", buttons:["✅ Visit done","🚫 Didn't come","Back"], branches:[["✅ Visit done","F5"],["🚫 Didn't come","F6"],["Back","F2"]]},
+   {id:"F5", kind:"api", name:"Mark visit done", rows:[["action","S_DONE"],["item_no","{{item_no}}"]], uses:"result, name",
+     branches:[["DONE","say: ✅ {{name}} marked done. The thank-you and review request go out automatically. → F2"],["NOT_FOUND","say: That number isn't open on today's list. It may already be marked. → F2"],["other","E1"]]},
+   {id:"F6", kind:"api", name:"Mark no-show", rows:[["action","S_NOSHOW"],["item_no","{{item_no}}"]], uses:"result, name",
+     branches:[["MARKED","say: {{name}} marked as no-show. They'll get a message to rebook and appear on the call list. → F2"],["NOT_FOUND","say: That number isn't open on today's list. It may already be marked. → F2"],["other","E1"]]}
+ ]},
+ { id:"calls", title:"4 · Call list", why:"Everyone the front desk should call, most urgent first: call-backs due now, patient requests, missed visits from the last 60 days, then new leads with no booking. Log each call so the list stays current.", steps:[
+   {id:"C1", kind:"api", name:"Call list", rows:[["action","S_CALLS"]], uses:"result, list_text, count",
+     branches:[["LIST","C2"],["other","E1"]]},
+   {id:"C2", kind:"ask", name:"Pick who you called", text:"Call list ({{count}}):\n\n{{list_text}}\n\nCall them, then reply with their number to log the result, or 0 for the menu.", save:"item_no", note:"Number validation. If the list is empty, it says: Nothing here right now.", branches:[["0","F1"],["any other number","C3"]]},
+   {id:"C3", kind:"ask", name:"Call result", text:"How did the call with no. {{item_no}} go?", buttons:["📵 No answer","⏰ Call later","✅ Done","🙅 Not interested","❌ Wrong number","🗑 Remove"], save:"outcome",
+     note:"Save the code, not the label: no_answer, call_later, done, not_interested, wrong_number, drop. Not interested, Wrong number and Remove take a new lead off the list as lost.",
+     branches:[["📵 No answer → no_answer","C4"],["⏰ Call later → call_later","C4"],["✅ Done → done","C5"],["🙅 Not interested → not_interested","C5"],["❌ Wrong number → wrong_number","C5"],["🗑 Remove → drop","C5"]]},
+   {id:"C4", kind:"ask", name:"When to try again", text:"When should we try again?", buttons:["Today","Tomorrow","In 2 days"], save:"retry", note:"Save the code: today, tomorrow, 2days.", next:"C5"},
+   {id:"C5", kind:"api", name:"Log the call", rows:[["action","S_CALL_LOG"],["item_no","{{item_no}}"],["outcome","{{outcome}}"],["retry","{{retry}}"]], uses:"result, name, next",
+     note:"retry is ignored for Done, Not interested, Wrong number and Remove, so an old value from an earlier call does no harm.",
+     branches:[["LOGGED","say: Saved for {{name}} ✅ → C1"],["NOT_FOUND","say: That number isn't on the call list any more. → C1"],["BAD_REQUEST","say: For a call-back request, use No answer, Call later or Done. → C3"],["other","E1"]]}
+ ]},
+ { id:"book", title:"5 · Book for a patient", why:"For phone bookings and front-desk bookings. Staff also see times that are already taken and can double-book them; patients can't. A number the clinic hasn't seen is added as a patient first.", steps:[
+   {id:"K1", kind:"ask", name:"Patient's number", text:"Patient's 10-digit mobile number?", save:"patient_phone", note:"Use the phone validation.", next:"K2"},
+   {id:"K2", kind:"api", name:"Get days", rows:[["action","SLOTS"]], uses:"result, days_text", branches:[["SLOTS","K3"],["NO_SLOTS","say: No open days in the next 2 weeks. → F1"],["other","E1"]]},
+   {id:"K3", kind:"ask", name:"Pick a day", text:"Which day? Reply with the number.\n\n{{days_text}}", save:"day_no", note:"Number validation.", next:"K4"},
+   {id:"K4", kind:"api", name:"Get times", rows:[["action","SLOTS"],["day_no","{{day_no}}"]], uses:"result, slots_text, date, date_label", branches:[["SLOTS","K5"],["NO_SLOTS","say: No times on that day. Pick another. → K3"],["other","E1"]]},
+   {id:"K5", kind:"ask", name:"Pick a time", text:"Times on {{date_label}}. Reply with the number.\nBooked times are marked; picking one adds a second patient at that time.\n\n{{slots_text}}", save:"slot_no", note:"Number validation.", next:"K6"},
+   {id:"K6", kind:"ask", name:"What's it for", text:"What is the visit for?", buttons:["Check-up","Cleaning","Tooth pain","Root canal","Implant","Braces / aligners","Other"], save:"treatment", note:"Saved on the appointment so the clinic can see it.", next:"K7"},
+   {id:"K7", kind:"api", name:"Book for patient", rows:[["action","S_BOOK"],["patient_phone","{{patient_phone}}"],["date","{{date}}"],["slot_no","{{slot_no}}"],["treatment","{{treatment}}"]], uses:"result, label",
+     branches:[["BOOKED","say: ✅ Booked for {{label}}. The patient gets a reminder the day before. → F1"],["NOT_REGISTERED","K8"],["SLOT_TAKEN","say: That time was just taken. → K4"],["BAD_REQUEST","say: Please check the number and pick a time from the list. → K1"],["other","E1"]]},
+   {id:"K8", kind:"ask", name:"New patient's name", text:"New patient. What's their name?", save:"name", next:"K9"},
+   {id:"K9", kind:"api", name:"Add the patient", rows:[["action","S_WALKIN"],["patient_phone","{{patient_phone}}"],["name","{{name}}"]], uses:"result",
+     branches:[["CREATED","K7 (books the same time)"],["EXISTS","K7"],["BAD_REQUEST","K8"],["other","E1"]]}
+ ]},
+ { id:"walkin", title:"6 · Add a walk-in", why:"For someone who walks in or phones without booking yet. They become a lead, get follow-up messages, and appear on the call list until they book.", steps:[
+   {id:"W1", kind:"ask", name:"Walk-in number", text:"Walk-in patient's 10-digit mobile number?", save:"patient_phone", note:"Use the phone validation.", next:"W2"},
+   {id:"W2", kind:"ask", name:"Walk-in name", text:"Their name?", save:"name", next:"W3"},
+   {id:"W3", kind:"api", name:"Add walk-in", rows:[["action","S_WALKIN"],["patient_phone","{{patient_phone}}"],["name","{{name}}"]], uses:"result",
+     branches:[["CREATED","W4"],["EXISTS","say: Already a patient. → W4"],["BAD_REQUEST","say: Please check the number and name. → W1"],["other","E1"]]},
+   {id:"W4", kind:"ask", name:"Book now?", text:"{{name}} is added. Book a time for them now?", buttons:["📅 Book now","Staff menu"], branches:[["📅 Book now","K2"],["Staff menu","F1"]]}
+ ]},
+ { id:"find", title:"7 · Find a patient", why:"Search by name or phone digits. It shows up to 5 matches, each with their next visit.", steps:[
+   {id:"Q1", kind:"ask", name:"Search", text:"Type a name or at least 4 digits of the number.", save:"query", next:"Q2"},
+   {id:"Q2", kind:"api", name:"Find patient", rows:[["action","S_FIND"],["query","{{query}}"]], uses:"result, list_text",
+     branches:[["LIST","Q3"],["NONE","say: No patient found. Try part of the name or the last 4 digits. → Q1"],["other","E1"]]},
+   {id:"Q3", kind:"ask", name:"Results", text:"Found:\n\n{{list_text}}", buttons:["📅 Book for patient","🔎 Search again","Staff menu"], branches:[["📅 Book for patient","K1"],["🔎 Search again","Q1"],["Staff menu","F1"]]}
+ ]}
+];
+const ERR = [
+  {id:"E1", kind:"say", name:"Something went wrong", text:"Sorry, that didn't work. Please try again from the menu.", buttons:["Staff menu"], branches:[["Staff menu","F1"]],
+   note:"Covers ERROR, BAD_REQUEST, UNKNOWN_CLINIC, BAD_KEY and a timeout. If NOT_STAFF ever reaches here, the number was removed from staff: go to G4 instead."}
+];
+
+function el(t,a={},k=[]){const e=document.createElement(t);for(const[x,v]of Object.entries(a)){if(x==="text")e.textContent=v;else if(x==="cls")e.className=v;else e.setAttribute(x,v)}for(const c of k)e.append(c);return e}
+const ICON='<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3.5A1.5 1.5 0 0 1 4.5 2H11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
+let toastT;
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),1100)}
+function sel(n){try{const r=document.createRange();r.selectNodeContents(n);const s=getSelection();s.removeAllRanges();s.addRange(r)}catch(e){}}
+function doCopy(v,b,target){const done=()=>{b.classList.add("done");toast("Copied: "+(v.length>40?v.slice(0,40)+"…":v));setTimeout(()=>b.classList.remove("done"),900)};const fail=()=>{sel(target||b);toast("Press Ctrl+C / Cmd+C to copy")};try{navigator.clipboard.writeText(v).then(done,fail)}catch(e){fail()}}
+function copyBtn(v,extra=""){const b=el("button",{type:"button",cls:"cp "+extra,title:"Copy "+v,"aria-label":"Copy "+v});const t=el("span",{text:v});b.append(t);b.insertAdjacentHTML("beforeend",ICON);b.onclick=()=>doCopy(v,b,t);return b}
+function iconBtn(v,label,target){const b=el("button",{type:"button",cls:"ib","aria-label":label});b.insertAdjacentHTML("beforeend",ICON);b.append(el("span",{text:label}));b.onclick=()=>doCopy(v,b,target);return b}
+function kvTable(t,rows,heads){t.append(el("tr",{},heads.map(h=>el("th",{text:h}))));for(const r of rows)t.append(el("tr",{},[el("td",{},[copyBtn(r[0])]),el("td",{},[copyBtn(r[1])]),...(r[2]?[el("td",{cls:"note",text:r[2]})]:[])]))}
+
+kvTable(document.getElementById("settings"),[["Method","POST"],["URL",URL_],["Header","Content-Type: application/json"]],["Setting","Value"]);
+kvTable(document.getElementById("common"),COMMON,["Key","Value"]);
+kvTable(document.getElementById("mapping"),MAP,["Reply field","Save as","When"]);
+
+const KIND={say:["Message","c-say"],ask:["Question / buttons","c-ask"],api:["API call","c-api"]};
+function goCell(g){
+  const wrap=el("div",{cls:"inline"});
+  const m=g.match(/^say: (.*?)(?: → (\S+))?$/);
+  if(m){wrap.append(el("span",{text:"say"}),copyBtn(m[1],"sm"));if(m[2])wrap.append(el("span",{text:"then →"}),copyBtn(m[2],"sm"));return wrap}
+  const id=g.match(/^([A-Z]\d+)(.*)$/);
+  wrap.append(el("span",{text:"→"}));
+  if(id){wrap.append(copyBtn(id[1],"sm"));if(id[2].trim())wrap.append(el("span",{text:id[2].trim()}))}else wrap.append(el("span",{text:g}));
+  return wrap;
+}
+function step(s){
+  const body=el("div",{cls:"sbody"});
+  body.append(el("div",{cls:"shead"},[el("span",{cls:"chip "+KIND[s.kind][1],text:KIND[s.kind][0]}),el("h3",{text:s.name}),iconBtn(s.name,"Name")]));
+  if(s.text){const bub=el("div",{cls:"bubble",text:s.text});body.append(el("div",{cls:"bubwrap"},[bub,iconBtn(s.text,"Copy message",bub)]))}
+  if(s.buttons)body.append(el("div",{cls:"buttons"},s.buttons.map(b=>copyBtn(b,"pill"))));
+  if(s.rows){
+    const rows=[...COMMON,...s.rows];
+    const t=el("table",{cls:"kv"});kvTable(t,rows,["Key","Value"]);
+    body.append(el("div",{cls:"tablewrap"},[t]));
+    body.append(el("div",{cls:"inline"},[iconBtn(rows.map(r=>r[0]+": "+r[1]).join("\n"),"Copy all rows"),iconBtn(URL_,"Copy URL")]));
+    body.append(el("div",{cls:"inline"},[el("span",{text:"Save from reply:"}),...s.uses.split(",").map(x=>copyBtn("{{"+x.trim()+"}}","sm"))]));
+  }
+  if(s.save)body.append(el("div",{cls:"inline"},[el("span",{text:"Save answer as"}),copyBtn("{{"+s.save+"}}","sm"),...(s.note?[el("span",{text:s.note})]:[])]));
+  else if(s.note)body.append(el("div",{cls:"save",text:s.note}));
+  if(s.branches){
+    const t=el("table",{cls:"branches"});
+    for(const[r,g]of s.branches){
+      const left=r==="other"?el("span",{cls:"res err",text:"anything else"}):copyBtn(r,s.kind==="api"?"sm res-c":"sm");
+      t.append(el("tr",{},[el("td",{},[left]),el("td",{},[goCell(g)])]));
+    }
+    body.append(el("div",{cls:"tablewrap"},[t]));
+  } else if(s.next)body.append(goCell(s.next));
+  return el("li",{cls:"step",id:s.id},[el("div",{},[copyBtn(s.id,"sm")]),body]);
+}
+const root=document.getElementById("flows");
+for(const f of FLOWS){root.append(el("section",{id:f.id},[el("h2",{text:f.title}),el("p",{cls:"why",text:f.why}),el("ol",{cls:"steps"},f.steps.map(step))]))}
+const es=document.getElementById("errsteps");ERR.forEach(s=>es.append(step(s)));
+document.querySelectorAll("code").forEach(c=>{c.style.cursor="pointer";c.tabIndex=0;c.title="Click to copy";const go=()=>doCopy(c.textContent,c,c);c.onclick=go;c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}}});
+</script>
