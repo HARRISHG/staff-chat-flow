@@ -81,10 +81,17 @@ th, td { text-align: left; padding: 12px 18px; border-top: 1px solid var(--line)
 thead th { border-top: 0; font: 600 .72rem var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 td.t { font-family: var(--display); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
-/* Setup */
-.setup { border: 1.5px solid var(--teal); border-radius: 18px; padding: 22px; display: grid; gap: 14px; }
-.setup ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
-.note { color: var(--muted); font-size: .92rem; }
+/* Benefits */
+.benefits { display: grid; gap: 20px; }
+.ben-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .ben-grid { grid-template-columns: 1fr; } }
+.ben { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.ben.lead { border: 1.5px solid var(--teal); }
+.ben .tag { font: 700 .72rem var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--teal); }
+.ben h3 { font-size: clamp(1.3rem, 2.4vw, 1.6rem); line-height: 1.15; letter-spacing: -0.02em; }
+.ben.lead h3 em { font-family: var(--serif); font-weight: 400; font-style: italic; color: var(--teal); letter-spacing: 0; }
+.ben ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted); font-size: .97rem; }
+.ben ul b { color: var(--ink); font-weight: 600; }
 </style>
 
 <div class="wrap">
@@ -116,6 +123,53 @@ td.t { font-family: var(--display); font-weight: 600; font-variant-numeric: tabu
       <span><i class="dot" style="background: var(--sky)"></i>Patient: in the clinic chat</span>
     </div>
   </header>
+
+  <section class="benefits" id="benefits">
+    <div class="section-head">
+      <span class="eyebrow">What your clinic gets</span>
+      <h2>More reviews. More patients in the chair.</h2>
+    </div>
+    <div class="ben-grid">
+      <article class="ben lead">
+        <span class="tag">More Google reviews</span>
+        <h3>Every happy patient is <em>asked</em>, at the right moment.</h3>
+        <ul>
+          <li><b>No visit is missed.</b> Every completed visit gets a rating request, not just the patients your team remembers to ask.</li>
+          <li><b>Asked while the visit is fresh,</b> 3 hours afterwards, with one reminder if they forget.</li>
+          <li><b>Happy patients go straight to your Google page.</b> 4 and 5 stars get your review link in one tap.</li>
+          <li><b>Unhappy patients reach you first.</b> Low ratings stay private and your team is alerted to call, before it becomes a public review.</li>
+        </ul>
+      </article>
+      <article class="ben lead">
+        <span class="tag">More patient flow</span>
+        <h3>More enquiries <em>booked</em>, and more patients coming back.</h3>
+        <ul>
+          <li><b>Every enquiry gets an instant answer,</b> day or night, and can book straight from the chat.</li>
+          <li><b>Nobody who enquires is forgotten.</b> Three follow-ups go out until they book.</li>
+          <li><b>Missed appointments are rebooked</b> instead of lost, by message and on your call list.</li>
+          <li><b>Past patients come back.</b> Anyone with no visit for 6 months gets a warm invitation to return, and visited patients hear from you every month.</li>
+        </ul>
+      </article>
+      <article class="ben">
+        <span class="tag">Fewer empty chairs</span>
+        <h3>Patients turn up, or free the slot in time.</h3>
+        <ul>
+          <li><b>Two reminders</b> before every appointment.</li>
+          <li><b>Rescheduling takes a few taps</b> in the chat, so patients move a visit instead of skipping it.</li>
+          <li><b>Cancellations alert your front desk</b> straight away, so the slot can go to someone else.</li>
+        </ul>
+      </article>
+      <article class="ben">
+        <span class="tag">A calmer front desk</span>
+        <h3>The follow-up runs itself. Your team makes the calls that matter.</h3>
+        <ul>
+          <li><b>One call list,</b> most urgent first, instead of notes and memory.</li>
+          <li><b>Routine messages go out automatically,</b> so busy days don't stop follow-up.</li>
+          <li><b>A daily summary</b> shows the owner exactly what happened.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
 
   <section class="stage" id="enquiry">
     <div class="stage-head">
@@ -236,21 +290,6 @@ td.t { font-family: var(--display); font-weight: 600; font-variant-numeric: tabu
         </tbody>
       </table>
     </div>
-  </section>
-
-  <section class="setup" id="start">
-    <div class="section-head">
-      <span class="eyebrow">Getting started</span>
-      <h2>What we need from you</h2>
-    </div>
-    <ol>
-      <li>Your opening hours for each day of the week, including breaks.</li>
-      <li>Your doctors' names.</li>
-      <li>The front desk mobile numbers that should get instant alerts.</li>
-      <li>Your staff list with mobile numbers, for the staff chat.</li>
-      <li>Your Google review link.</li>
-    </ol>
-    <p class="note">With these, we set up your clinic chat and your staff chat, then run a test week with your team before patients start receiving messages.</p>
   </section>
 
 </div>
