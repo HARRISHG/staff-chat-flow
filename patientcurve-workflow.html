@@ -1,0 +1,256 @@
+<title>PatientCurve Clinic Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=Instrument+Serif:ital@1&display=swap">
+<style>
+/* Layout: PatientCurve website brand. A rising curve through the five stages up top, then one section per stage in journey order, each a list of moments with when / what / who. Teal = automatic, amber = front desk, sky = patient. */
+:root {
+  --paper: #f6f4ef; --surface: #ffffff; --ink: #0a1d27; --muted: #55666e; --line: rgba(10, 29, 39, 0.12);
+  --teal: #0b8a7c; --teal-soft: #dff7ef; --amber: #b9741a; --amber-soft: #fcf0dc; --sky: #2f6fc4; --sky-soft: #e2edfb;
+  --coral: #c9553a; --hero: #0f2c37; --hero-fg: #f6f4ef; --hero-muted: #9fb6bd; --mint: #5fe0bd;
+  --display: "Inter Tight", "Inter", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #0b171d; --surface: #12232b; --ink: #e9eef0; --muted: #9aaeb5; --line: rgba(233, 238, 240, 0.12);
+  --teal: #4fd3b4; --teal-soft: #12352f; --amber: #f0b45a; --amber-soft: #3a2c14; --sky: #84b3f2; --sky-soft: #172a45;
+  --coral: #f2917a; --hero: #102a33; --hero-fg: #eef3f4; --hero-muted: #93abb2; --mint: #5fe0bd; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #0b171d; --surface: #12232b; --ink: #e9eef0; --muted: #9aaeb5; --line: rgba(233, 238, 240, 0.12);
+  --teal: #4fd3b4; --teal-soft: #12352f; --amber: #f0b45a; --amber-soft: #3a2c14; --sky: #84b3f2; --sky-soft: #172a45;
+  --coral: #f2917a; --hero: #102a33; --hero-fg: #eef3f4; --hero-muted: #93abb2; --mint: #5fe0bd; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 16px/1.6 var(--body); padding-inline: 16px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 24px 72px; display: grid; gap: 56px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 5.2vw, 3.4rem); line-height: 1.04; font-weight: 800; }
+h1 em { font-family: var(--serif); font-weight: 400; font-style: italic; color: var(--mint); letter-spacing: 0; }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.1; font-weight: 700; }
+h3 { font-size: 1.05rem; line-height: 1.3; font-weight: 700; }
+p { margin: 0; max-width: 66ch; }
+.eyebrow { font: 600 .75rem var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+/* Hero */
+.hero { background: var(--hero); color: var(--hero-fg); border-radius: 24px; padding: clamp(24px, 5vw, 48px); display: grid; gap: 20px; }
+.hero .eyebrow { color: var(--hero-muted); }
+.hero .lede { color: var(--hero-muted); font-size: 1.08rem; }
+.curve { overflow-x: auto; }
+.curve svg { display: block; width: 100%; min-width: 600px; height: auto; }
+.curve text { font-family: var(--body); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .9rem; color: var(--hero-muted); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+
+/* Stage sections */
+.stage { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 20px 40px; align-items: start; }
+@media (max-width: 820px) { .stage { grid-template-columns: 1fr; } }
+.stage-head { display: grid; gap: 10px; }
+.stage-no { font: 700 .85rem var(--display); color: var(--teal); letter-spacing: .04em; }
+.stage-head p { color: var(--muted); }
+.moments { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.moments li { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 4px 18px; padding: 16px 20px; border-top: 1px solid var(--line); }
+.moments li:first-child { border-top: 0; }
+@media (max-width: 520px) { .moments li { grid-template-columns: 1fr; } }
+.when { font: 600 .9rem var(--display); font-variant-numeric: tabular-nums; color: var(--ink); padding-top: 1px; }
+.what { display: grid; gap: 6px; min-width: 0; }
+.what p { color: var(--muted); font-size: .97rem; }
+.what b { color: var(--ink); font-weight: 600; }
+.who { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 600 .72rem var(--body); letter-spacing: .04em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.c-auto { color: var(--teal); background: var(--teal-soft); }
+.c-desk { color: var(--amber); background: var(--amber-soft); }
+.c-pt { color: var(--sky); background: var(--sky-soft); }
+
+/* Front desk + guardrails */
+.split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 820px) { .split { grid-template-columns: 1fr; } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.panel ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.panel li { display: grid; gap: 2px; }
+.panel li b { font-weight: 600; }
+.panel li span { color: var(--muted); font-size: .95rem; }
+.section-head { display: grid; gap: 8px; }
+.section-head p { color: var(--muted); }
+
+/* Timing table */
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: .95rem; }
+th, td { text-align: left; padding: 12px 18px; border-top: 1px solid var(--line); vertical-align: top; }
+thead th { border-top: 0; font: 600 .72rem var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+td.t { font-family: var(--display); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Setup */
+.setup { border: 1.5px solid var(--teal); border-radius: 18px; padding: 22px; display: grid; gap: 14px; }
+.setup ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.note { color: var(--muted); font-size: .92rem; }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">PatientCurve · how it works in your clinic</span>
+    <h1>Every patient followed up, until they're <em>back in the chair.</em></h1>
+    <p class="lede">PatientCurve looks after each patient from their first message to their next check-up. Messages go out on time automatically, and your front desk gets a clear list of who needs a call.</p>
+    <div class="curve" role="img" aria-label="The patient journey: new enquiry, booked, visit day, staying in touch, bringing patients back, then booked again.">
+      <svg viewBox="0 0 900 230" aria-hidden="true">
+        <path d="M40 190 C 180 185, 230 150, 300 128 S 470 70, 560 62 S 760 40, 860 30" fill="none" stroke="var(--mint)" stroke-width="3" stroke-linecap="round"/>
+        <path d="M860 30 C 900 90, 640 210, 300 128" fill="none" stroke="var(--hero-muted)" stroke-width="1.5" stroke-dasharray="5 6"/>
+        <g fill="var(--hero)" stroke="var(--mint)" stroke-width="3">
+          <circle cx="40" cy="190" r="9"/><circle cx="300" cy="128" r="9"/><circle cx="560" cy="62" r="9"/><circle cx="740" cy="44" r="9"/><circle cx="860" cy="30" r="9"/>
+        </g>
+        <g fill="var(--hero-fg)" font-size="15" font-weight="600">
+          <text x="40" y="222" text-anchor="start">1 · New enquiry</text>
+          <text x="300" y="168" text-anchor="middle">2 · Booked</text>
+          <text x="560" y="102" text-anchor="middle">3 · Visit day</text>
+          <text x="740" y="80" text-anchor="middle">4 · Staying in touch</text>
+          <text x="860" y="14" text-anchor="end">5 · Bringing back</text>
+        </g>
+        <text x="610" y="176" fill="var(--hero-muted)" font-size="13">a returning patient books again</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background: var(--mint)"></i>Automatic: PatientCurve sends it</span>
+      <span><i class="dot" style="background: var(--amber)"></i>Front desk: your team does it</span>
+      <span><i class="dot" style="background: var(--sky)"></i>Patient: in the clinic chat</span>
+    </div>
+  </header>
+
+  <section class="stage" id="enquiry">
+    <div class="stage-head">
+      <span class="stage-no">STAGE 1</span>
+      <h2>New enquiry</h2>
+      <p>Someone messages the clinic for the first time. The aim is a booked visit while their interest is high.</p>
+    </div>
+    <ol class="moments">
+      <li><span class="when">Right away</span><div class="what"><p><b>The chat answers instantly, day or night.</b> It shows the open days and times, and the patient books in a few taps.</p><div class="who"><span class="chip c-pt">Patient</span><span class="chip c-auto">Automatic</span></div></div></li>
+      <li><span class="when">Right away</span><div class="what"><p><b>Or they ask for a call back.</b> Your front desk gets an alert straight away, and the patient goes onto the call list.</p><div class="who"><span class="chip c-pt">Patient</span><span class="chip c-desk">Front desk</span></div></div></li>
+      <li><span class="when">After 1, 3 and 7 days</span><div class="what"><p><b>Friendly follow-ups if they haven't booked.</b> They stop the moment the patient books.</p><div class="who"><span class="chip c-auto">Automatic</span></div></div></li>
+      <li><span class="when">After 30 days</span><div class="what"><p><b>Still no booking:</b> the enquiry is closed, so nobody keeps chasing it.</p><div class="who"><span class="chip c-auto">Automatic</span></div></div></li>
+    </ol>
+  </section>
+
+  <section class="stage" id="booked">
+    <div class="stage-head">
+      <span class="stage-no">STAGE 2</span>
+      <h2>Booked</h2>
+      <p>The appointment is in the diary. Now it has to turn into a filled chair.</p>
+    </div>
+    <ol class="moments">
+      <li><span class="when">1 day before</span><div class="what"><p><b>Reminder</b> with the date and time.</p><div class="who"><span class="chip c-auto">Automatic</span></div></div></li>
+      <li><span class="when">2 hours before</span><div class="what"><p><b>Second reminder</b> on the day.</p><div class="who"><span class="chip c-auto">Automatic</span></div></div></li>
+      <li><span class="when">Any time</span><div class="what"><p><b>The patient confirms, reschedules or cancels in the chat,</b> without calling the clinic.</p><div class="who"><span class="chip c-pt">Patient</span></div></div></li>
+      <li><span class="when">On a cancellation</span><div class="what"><p><b>Your front desk is alerted straight away,</b> so the free slot can go to someone else.</p><div class="who"><span class="chip c-desk">Front desk</span></div></div></li>
+    </ol>
+  </section>
+
+  <section class="stage" id="visit">
+    <div class="stage-head">
+      <span class="stage-no">STAGE 3</span>
+      <h2>Visit day</h2>
+      <p>Your front desk marks each visit with one tap. Everything after that runs by itself.</p>
+    </div>
+    <ol class="moments">
+      <li><span class="when">During the day</span><div class="what"><p><b>Mark each visit as done or didn't come</b> from today's list in the staff chat.</p><div class="who"><span class="chip c-desk">Front desk</span></div></div></li>
+      <li><span class="when">3 hours after</span><div class="what"><p><b>The patient is asked to rate their visit,</b> with one more reminder after 2 days if they haven't answered.</p><div class="who"><span class="chip c-auto">Automatic</span></div></div></li>
+      <li><span class="when">On the rating</span><div class="what"><p><b>4 or 5 stars:</b> they're invited to post a Google review. <b>1 to 3 stars:</b> the feedback stays private, and your front desk is alerted to call them.</p><div class="who"><span class="chip c-auto">Automatic</span><span class="chip c-desk">Front desk</span></div></div></li>
+      <li><span class="when">Next day</span><div class="what"><p><b>A thank-you message</b> to the patient.</p><div class="who"><span class="chip c-auto">Automatic</span></div></div></li>
+      <li><span class="when">If they didn't come</span><div class="what"><p><b>A message to rebook 2 hours later, and again after 2 days.</b> They also appear on the call list until they rebook.</p><div class="who"><span class="chip c-auto">Automatic</span><span class="chip c-desk">Front desk</span></div></div></li>
+    </ol>
+  </section>
+
+  <section class="stage" id="touch">
+    <div class="stage-head">
+      <span class="stage-no">STAGE 4</span>
+      <h2>Staying in touch</h2>
+      <p>Patients who have visited hear from the clinic now and then, so the clinic stays the one they think of.</p>
+    </div>
+    <ol class="moments">
+      <li><span class="when">About every 30 days</span><div class="what"><p><b>A short, useful message,</b> sent in the morning. It rotates between four messages, so the same one doesn't repeat each month.</p><div class="who"><span class="chip c-auto">Automatic</span></div></div></li>
+    </ol>
+  </section>
+
+  <section class="stage" id="back">
+    <div class="stage-head">
+      <span class="stage-no">STAGE 5</span>
+      <h2>Bringing patients back</h2>
+      <p>Patients who haven't visited in a while already trust the clinic. They get a warm invitation to return.</p>
+    </div>
+    <ol class="moments">
+      <li><span class="when">6 months, no visit</span><div class="what"><p><b>An invitation to come back,</b> followed by a reminder after 14 days and another after 30 days.</p><div class="who"><span class="chip c-auto">Automatic</span></div></div></li>
+      <li><span class="when">Any time</span><div class="what"><p><b>When they book, they're back at stage 2,</b> with reminders and everything that follows.</p><div class="who"><span class="chip c-pt">Patient</span></div></div></li>
+      <li><span class="when">1 year, no visit</span><div class="what"><p><b>Messages stop,</b> and the patient is marked as lost.</p><div class="who"><span class="chip c-auto">Automatic</span></div></div></li>
+    </ol>
+  </section>
+
+  <section class="split" aria-label="Your team and the rules PatientCurve follows">
+    <div class="panel">
+      <div class="section-head">
+        <span class="eyebrow">Your front desk</span>
+        <h2>The team's day, in one staff chat</h2>
+      </div>
+      <ul>
+        <li><b>Today's visits</b><span>Every appointment today. Mark each one done or didn't come.</span></li>
+        <li><b>Call list</b><span>Who to call, most urgent first: call-back requests, missed visits, then new enquiries. Log each call in a tap, and they come back on the list when it's time to try again.</span></li>
+        <li><b>Book for a patient</b><span>For phone calls and the front desk. Staff can also add a patient to a time that's already taken.</span></li>
+        <li><b>Add a walk-in</b><span>They get the same follow-ups as anyone who enquired.</span></li>
+        <li><b>Find a patient</b><span>By name or part of the phone number, with their next visit.</span></li>
+        <li><b>Instant alerts</b><span>Cancellations, call-back requests, patients who want to chat, and low ratings.</span></li>
+        <li><b>Daily summary at 6 pm</b><span>The last 24 hours (enquiries, bookings, cancellations, visits, no-shows, reviews, help requests), plus tomorrow's appointments.</span></li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="section-head">
+        <span class="eyebrow">Built to be polite</span>
+        <h2>Rules every message follows</h2>
+      </div>
+      <ul>
+        <li><b>No messages at night</b><span>Nothing goes out between 9 pm and 8:30 am. Anything due then waits until morning.</span></li>
+        <li><b>Out-of-date messages are cancelled</b><span>If a patient books, reschedules, cancels or opts out, the messages that no longer apply are dropped.</span></li>
+        <li><b>Patients stay in control</b><span>They can stop messages from the chat at any time and turn them back on whenever they like.</span></li>
+        <li><b>Sensible booking limits</b><span>30-minute slots within your opening hours, at least 1 hour's notice, up to 14 days ahead. A patient can hold one upcoming visit at a time; your team can book more.</span></li>
+        <li><b>Private feedback stays private</b><span>Only happy patients are pointed to Google. Unhappy ones reach your team first.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-head" id="timings" style="gap: 16px">
+    <div class="section-head">
+      <span class="eyebrow">At a glance</span>
+      <h2>Every automatic message and when it goes out</h2>
+      <p>These are our standard timings. We adjust them to suit your clinic.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Moment</th><th>Message</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td>New enquiry, not booked</td><td>Follow-up to book</td><td class="t">+1 day · +3 days · +7 days</td></tr>
+          <tr><td>Appointment booked</td><td>Reminder</td><td class="t">1 day before · 2 hours before</td></tr>
+          <tr><td>Visit done</td><td>Rating request</td><td class="t">+3 hours · +2 days</td></tr>
+          <tr><td>Visit done</td><td>Thank-you</td><td class="t">+1 day</td></tr>
+          <tr><td>Didn't come</td><td>Rebooking message</td><td class="t">+2 hours · +2 days</td></tr>
+          <tr><td>Visited patients</td><td>Staying-in-touch message</td><td class="t">about every 30 days</td></tr>
+          <tr><td>No visit for 6 months</td><td>Invitation to come back</td><td class="t">at 6 months · +14 days · +30 days</td></tr>
+          <tr><td>Every day</td><td>Summary to the clinic team</td><td class="t">6:00 pm</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="setup" id="start">
+    <div class="section-head">
+      <span class="eyebrow">Getting started</span>
+      <h2>What we need from you</h2>
+    </div>
+    <ol>
+      <li>Your opening hours for each day of the week, including breaks.</li>
+      <li>Your doctors' names.</li>
+      <li>The front desk mobile numbers that should get instant alerts.</li>
+      <li>Your staff list with mobile numbers, for the staff chat.</li>
+      <li>Your Google review link.</li>
+    </ol>
+    <p class="note">With these, we set up your clinic chat and your staff chat, then run a test week with your team before patients start receiving messages.</p>
+  </section>
+
+</div>
