@@ -1,0 +1,405 @@
+<title>Dr. Mohanapriya Enquiry Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&family=Instrument+Serif:ital@1&display=swap">
+<style>
+/* Layout: PatientCurve brand. Reads as a business case: today, the leak, what it may be worth (calculator), the system, how each gap closes, then confirmed vs open items and next steps. Coral marks loss, teal marks the system, amber marks anything still to confirm. */
+:root {
+  --paper: #f6f4ef; --surface: #ffffff; --ink: #0a1d27; --muted: #55666e; --line: rgba(10, 29, 39, 0.12);
+  --teal: #0b8a7c; --teal-soft: #dff7ef; --coral: #c24f35; --coral-soft: #fde9e3; --amber: #a8650a; --amber-soft: #fcf0dc;
+  --hero: #0f2c37; --hero-fg: #f6f4ef; --hero-muted: #9fb6bd; --mint: #5fe0bd; --field: #f6f4ef;
+  --display: "Inter Tight", "Inter", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #0b171d; --surface: #12232b; --ink: #e9eef0; --muted: #9aaeb5; --line: rgba(233, 238, 240, 0.12);
+  --teal: #4fd3b4; --teal-soft: #12352f; --coral: #f2917a; --coral-soft: #3d1f18; --amber: #f0b45a; --amber-soft: #3a2c14;
+  --hero: #102a33; --hero-fg: #eef3f4; --hero-muted: #93abb2; --mint: #5fe0bd; --field: #0b171d; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #0b171d; --surface: #12232b; --ink: #e9eef0; --muted: #9aaeb5; --line: rgba(233, 238, 240, 0.12);
+  --teal: #4fd3b4; --teal-soft: #12352f; --coral: #f2917a; --coral-soft: #3d1f18; --amber: #f0b45a; --amber-soft: #3a2c14;
+  --hero: #102a33; --hero-fg: #eef3f4; --hero-muted: #93abb2; --mint: #5fe0bd; --field: #0b171d; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 16px/1.6 var(--body); padding-inline: 16px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 24px 72px; display: grid; gap: 64px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.05; font-weight: 800; }
+h1 em, h2 em { font-family: var(--serif); font-weight: 400; font-style: italic; letter-spacing: 0; }
+h1 em { color: var(--mint); }
+h2 em { color: var(--teal); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.12; font-weight: 700; }
+h3 { font-size: 1.05rem; line-height: 1.3; font-weight: 700; }
+p { margin: 0; max-width: 68ch; }
+section { display: grid; gap: 22px; }
+.head { display: grid; gap: 8px; }
+.head p { color: var(--muted); }
+.eyebrow { font: 600 .75rem var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 600 .72rem var(--body); letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.p-ok { color: var(--teal); background: var(--teal-soft); }
+.p-tbc { color: var(--amber); background: var(--amber-soft); }
+.p-loss { color: var(--coral); background: var(--coral-soft); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+
+/* Hero */
+.hero { background: var(--hero); color: var(--hero-fg); border-radius: 24px; padding: clamp(24px, 5vw, 48px); display: grid; gap: 18px; }
+.hero .eyebrow { color: var(--hero-muted); }
+.hero .lede { color: var(--hero-muted); font-size: 1.08rem; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--hero-muted); font-size: .9rem; }
+.meta b { color: var(--hero-fg); font-weight: 600; }
+
+/* Facts */
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 860px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 440px) { .facts { grid-template-columns: 1fr; } }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 4px; align-content: start; min-width: 0; }
+.fact .n { font: 800 2rem/1.1 var(--display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.fact .n.word { font-size: 1.35rem; line-height: 1.25; }
+.fact span { color: var(--muted); font-size: .92rem; }
+
+/* Funnel */
+.funnel { display: grid; gap: 10px; }
+.bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; border-radius: 12px; padding: 14px 18px; min-width: 0; }
+.bar b { font-family: var(--display); font-weight: 700; }
+.bar .v { font: 700 1.1rem var(--display); font-variant-numeric: tabular-nums; }
+.b1 { background: var(--teal-soft); width: 100%; }
+.b2 { background: var(--teal-soft); width: 82%; }
+.b3 { background: var(--coral-soft); width: 64%; }
+.b4 { background: var(--coral-soft); width: 46%; }
+@media (max-width: 560px) { .b2, .b3, .b4 { width: 100%; } }
+.leaks { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.leak { border-top: 2px solid var(--coral); padding-top: 12px; display: grid; gap: 4px; }
+.leak p { color: var(--muted); font-size: .95rem; }
+
+/* Calculator */
+.calc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 820px) { .calc { grid-template-columns: 1fr; } }
+.field { display: grid; gap: 6px; }
+.field .lab { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; font-weight: 600; font-size: .95rem; }
+.field small { color: var(--muted); font-size: .85rem; }
+.inwrap { display: flex; align-items: center; gap: 8px; background: var(--field); border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; }
+.inwrap:focus-within { border-color: var(--teal); }
+.inwrap span { color: var(--muted); font-weight: 600; }
+.inwrap input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font: 600 1rem var(--body); padding: 10px 0; font-variant-numeric: tabular-nums; outline: none; }
+.out { display: grid; gap: 0; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); align-items: baseline; }
+.row:first-of-type { border-top: 0; }
+.row span { color: var(--muted); font-size: .95rem; }
+.row b { font: 700 1.15rem var(--display); font-variant-numeric: tabular-nums; text-align: right; }
+.row.big b { font-size: 1.6rem; }
+.row.loss b { color: var(--coral); }
+.row.gain b { color: var(--teal); }
+.formula { color: var(--muted); font-size: .85rem; }
+.warn { background: var(--amber-soft); color: var(--ink); border-radius: 12px; padding: 12px 14px; font-size: .92rem; }
+.warn b { color: var(--amber); }
+.btn { justify-self: start; font: 600 .85rem var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.btn:hover, .btn:focus-visible { border-color: var(--teal); outline: none; }
+
+/* Flow */
+.flow { display: grid; gap: 14px; }
+.lane { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; display: grid; gap: 2px; min-width: 0; flex: 1 1 140px; }
+.step b { font-size: .95rem; }
+.step span { color: var(--muted); font-size: .85rem; }
+.step.route { border-color: var(--teal); }
+.step.rec { border-color: var(--coral); }
+.lane-label { font: 600 .75rem var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* Gap table */
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: .95rem; }
+th, td { text-align: left; padding: 14px 18px; border-top: 1px solid var(--line); vertical-align: top; }
+thead th { border-top: 0; font: 600 .72rem var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+td:first-child { font-weight: 600; font-family: var(--display); }
+td.muted { color: var(--muted); }
+.report td { font-variant-numeric: tabular-nums; }
+.report td.num { text-align: right; color: var(--muted); }
+.report th.num { text-align: right; }
+
+/* Confirmed vs open */
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 820px) { .two { grid-template-columns: 1fr; } }
+.list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.list li { display: grid; gap: 2px; }
+.list li span { color: var(--muted); font-size: .92rem; }
+ol.qs { margin: 0; padding-left: 22px; display: grid; gap: 10px; }
+ol.qs li span { color: var(--muted); font-size: .92rem; display: block; }
+.integ { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.next { counter-reset: n; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.next li { counter-increment: n; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 6px; align-content: start; }
+.next li::before { content: "Step " counter(n); font: 700 .75rem var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--teal); }
+.next li span { color: var(--muted); font-size: .92rem; }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">PatientCurve · proposal for Dr. Mohanapriya</span>
+    <h1>Every ad enquiry managed until it becomes an <em>appointment.</em></h1>
+    <p class="lede">PatientCurve runs your clinic's enquiry-to-appointment workflow. It answers from information you approve, qualifies each enquiry, sends it to the right consultation, books it into your calendar, and gives your team a follow-up list for everyone who doesn't book.</p>
+    <div class="meta">
+      <span>Status <b>Draft for discussion</b></span>
+      <span>Pricing <b>After the open questions are answered</b></span>
+      <span>Date <b>October 2026</b></span>
+    </div>
+  </header>
+
+  <section id="today">
+    <div class="head">
+      <span class="eyebrow">Where you are today</span>
+      <h2>Your ads already bring the enquiries</h2>
+      <p>What you've told us so far.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><span class="pill p-ok">Confirmed</span><div class="n">~3</div><span>ad campaigns a month</span></div>
+      <div class="fact"><span class="pill p-ok">Confirmed</span><div class="n">~100</div><span>enquiries a month</span></div>
+      <div class="fact"><span class="pill p-ok">Confirmed</span><div class="n word">Mostly WhatsApp</div><span>where enquiries arrive</span></div>
+      <div class="fact"><span class="pill p-ok">Confirmed</span><div class="n word">Wrong answers</div><span>the current Meta AI bot has sometimes given patients incorrect information</span></div>
+    </div>
+  </section>
+
+  <section id="leak">
+    <div class="head">
+      <span class="eyebrow">Where enquiries can leak</span>
+      <h2>100 enquiries a month. How many become <em>appointments?</em></h2>
+      <p>Today nobody can say exactly how many enquiries book and how many quietly drop away. That number is the first thing PatientCurve makes visible.</p>
+    </div>
+    <div class="funnel" aria-label="Enquiry funnel">
+      <div class="bar b1"><b>Enquiries from ads</b><span class="v">~100 / month</span></div>
+      <div class="bar b2"><b>Book an appointment</b><span class="pill p-tbc">To confirm</span></div>
+      <div class="bar b3"><b>Enquire but don't book</b><span class="pill p-tbc">To confirm</span></div>
+      <div class="bar b4"><b>Revenue that never arrives</b><span class="pill p-loss">Possible loss</span></div>
+    </div>
+    <div class="leaks">
+      <div class="leak"><h3>Wrong or inconsistent answers</h3><p>A patient given the wrong fee, timing or treatment detail may not come back to check.</p></div>
+      <div class="leak"><h3>No clear next step</h3><p>Without knowing where the patient lives and what they need, it's hard to offer the right consultation.</p></div>
+      <div class="leak"><h3>Non-bookers fade away</h3><p>Someone who asks but doesn't book needs a call. Without a list, that depends on someone remembering.</p></div>
+      <div class="leak"><h3>No view of what works</h3><p>Without enquiry-to-appointment numbers for each campaign, it's hard to see which ads pay for themselves.</p></div>
+    </div>
+  </section>
+
+  <section id="value">
+    <div class="head">
+      <span class="eyebrow">What the gap may be worth</span>
+      <h2>Put your own numbers in</h2>
+      <p>Only the 100 enquiries a month is confirmed. Every other figure starts as an example, so replace it with your clinic's real number. The results update as you type.</p>
+    </div>
+    <div class="calc">
+      <form class="card" id="calc" novalidate>
+        <div class="field">
+          <label class="lab" for="leads">Enquiries a month <span class="pill p-ok">Confirmed</span></label>
+          <div class="inwrap"><input id="leads" type="number" inputmode="numeric" min="0" step="1" value="100"></div>
+        </div>
+        <div class="field">
+          <label class="lab" for="bookRate">Enquiries that book today <span class="pill p-tbc">Example</span></label>
+          <div class="inwrap"><input id="bookRate" type="number" inputmode="decimal" min="0" max="100" step="1" value="40"><span>%</span></div>
+        </div>
+        <div class="field">
+          <label class="lab" for="consultFee">Consultation fee <span class="pill p-tbc">Example</span></label>
+          <div class="inwrap"><span>₹</span><input id="consultFee" type="number" inputmode="numeric" min="0" step="50" value="500"></div>
+          <small>Use an average if offline and video fees differ.</small>
+        </div>
+        <div class="field">
+          <label class="lab" for="treatRate">Consultations that go on to treatment <span class="pill p-tbc">Example</span></label>
+          <div class="inwrap"><input id="treatRate" type="number" inputmode="decimal" min="0" max="100" step="1" value="50"><span>%</span></div>
+        </div>
+        <div class="field">
+          <label class="lab" for="treatValue">Average treatment value <span class="pill p-tbc">Example</span></label>
+          <div class="inwrap"><span>₹</span><input id="treatValue" type="number" inputmode="numeric" min="0" step="500" value="15000"></div>
+        </div>
+        <div class="field">
+          <label class="lab" for="recoverRate">Non-bookers your team wins back <span class="pill p-tbc">Scenario</span></label>
+          <div class="inwrap"><input id="recoverRate" type="number" inputmode="decimal" min="0" max="100" step="1" value="20"><span>%</span></div>
+          <small>A what-if. Try a cautious figure.</small>
+        </div>
+        <button class="btn" type="button" id="reset">Reset to example figures</button>
+      </form>
+      <div class="card">
+        <div class="warn" id="exampleNote"><b>Example figures in use.</b> These results aren't a forecast until the amber fields hold your clinic's real numbers.</div>
+        <div class="out">
+          <div class="row"><span>Enquiries that don't book each month</span><b id="oNot">–</b></div>
+          <div class="row"><span>Value of one booked patient<br><span class="formula">fee + (treatment rate × treatment value)</span></span><b id="oPer">–</b></div>
+          <div class="row big loss"><span>Value at stake each month</span><b id="oStake">–</b></div>
+          <div class="row"><span>Patients won back each month</span><b id="oRec">–</b></div>
+          <div class="row big gain"><span>Value of those patients each month</span><b id="oGain">–</b></div>
+          <div class="row gain"><span>The same, over 12 months</span><b id="oYear">–</b></div>
+        </div>
+        <p class="formula">Once pricing is agreed, we'll add one line: how many won-back patients a month cover the cost of PatientCurve.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="system">
+    <div class="head">
+      <span class="eyebrow">The system</span>
+      <h2>From ad to appointment, with <em>no loose ends</em></h2>
+      <p>Every enquiry follows the same path. Patients who book go into your calendar. Patients who don't go to your team.</p>
+    </div>
+    <div class="flow">
+      <span class="lane-label">Every enquiry</span>
+      <div class="lane">
+        <div class="step"><b>Ad</b><span>Patient sees your campaign</span></div>
+        <div class="step"><b>WhatsApp enquiry</b><span>Message arrives on your number</span></div>
+        <div class="step"><b>Patient details</b><span>Name and phone, every time</span></div>
+        <div class="step"><b>Location and need</b><span>Where they live, what they want</span></div>
+        <div class="step"><b>Correct information</b><span>Only answers you've approved</span></div>
+      </div>
+      <span class="lane-label">Routed to the right consultation</span>
+      <div class="lane">
+        <div class="step route"><b>Local patient</b><span>Offline consultation: clinic address, fee, timings</span></div>
+        <div class="step route"><b>Outside town, e.g. Trichy</b><span>Video consultation: how it works, fee</span></div>
+        <div class="step route"><b>Appointment booked</b><span>Patient picks a free time</span></div>
+        <div class="step route"><b>Google Calendar</b><span>Booking appears in your calendar</span></div>
+      </div>
+      <span class="lane-label">If they don't book</span>
+      <div class="lane">
+        <div class="step rec"><b>Follow-up list</b><span>Details and what they asked about</span></div>
+        <div class="step rec"><b>Staff call</b><span>Your team calls and logs the result</span></div>
+        <div class="step rec"><b>Recovered</b><span>Booked straight into the calendar</span></div>
+        <div class="step rec"><b>PMS updated</b><span>Patient record kept up to date</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gaps">
+    <div class="head">
+      <span class="eyebrow">How PatientCurve closes the gap</span>
+      <h2>Seven things the clinic gets</h2>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Area</th><th>What PatientCurve does</th><th>Business outcome</th></tr></thead>
+        <tbody>
+          <tr><td>Correct, controlled information</td><td>Patients only get answers from information the clinic has approved: consultation types, fees, timings and address. Anything outside it goes to your team instead of being guessed.</td><td class="muted">No more wrong fees or details reaching patients.</td></tr>
+          <tr><td>Lead qualification</td><td>Collects the same details from every enquiry in fixed steps: name, phone, location and requirement.</td><td class="muted">Every enquiry arrives complete and ready to act on.</td></tr>
+          <tr><td>Consultation routing</td><td>Your location rules decide the route: local patients to offline consultation, patients from other towns to video consultation, each with its own information and fee.</td><td class="muted">The right offer for each patient, first time.</td></tr>
+          <tr><td>Appointment conversion</td><td>The patient picks a free time inside the chat, the booking goes into Google Calendar, and reminders go out before the visit.</td><td class="muted">Interest becomes a booked appointment while it's high.</td></tr>
+          <tr><td>Staff follow-up</td><td>Anyone who doesn't book goes onto your team's follow-up list with their details and what they asked about. Staff log each call in a tap.</td><td class="muted">Nobody who enquired is forgotten.</td></tr>
+          <tr><td>Patient recovery</td><td>Patients stay on the list until they book or your team closes them, and come back on the list when it's time to call again.</td><td class="muted">Lost enquiries turn back into appointments.</td></tr>
+          <tr><td>Visibility</td><td>A report from enquiry to appointment: enquiries, qualified, booked offline, booked by video, recovered by staff, still open.</td><td class="muted">You see your conversion rate, and where it drops.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="head" style="gap: 10px">
+      <h3>The conversion report you'd see each month</h3>
+      <p class="formula">Layout only, with no real data. Showing results per campaign depends on reading the ad source from WhatsApp, which is still to confirm.</p>
+    </div>
+    <div class="tablewrap">
+      <table class="report">
+        <thead><tr><th>Campaign</th><th class="num">Enquiries</th><th class="num">Qualified</th><th class="num">Booked offline</th><th class="num">Booked video</th><th class="num">Recovered by staff</th><th class="num">Conversion</th></tr></thead>
+        <tbody>
+          <tr><td>Campaign 1</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td>Campaign 2</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td>Campaign 3</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="integrations">
+    <div class="head">
+      <span class="eyebrow">Systems it connects</span>
+      <h2>Works with what the clinic already uses</h2>
+    </div>
+    <div class="integ">
+      <div class="card"><span class="pill p-ok">Required</span><h3>WhatsApp</h3><p class="formula">Where every enquiry starts. Moving your number from the current Meta AI bot is still to confirm.</p></div>
+      <div class="card"><span class="pill p-ok">Required</span><h3>Google Calendar</h3><p class="formula">Every booking lands here. To confirm: whether offline and video consultations use separate calendars, and how video links are sent.</p></div>
+      <div class="card"><span class="pill p-tbc">Depends on PMS</span><h3>Clinic PMS</h3><p class="formula">If your PMS can connect, patient updates can sync automatically. If not, staff update it as today, and PatientCurve tracks the follow-up.</p></div>
+      <div class="card"><span class="pill p-ok">Core</span><h3>PatientCurve</h3><p class="formula">Connects the three. Holds the enquiry, the routing, the follow-up list and the report.</p></div>
+    </div>
+  </section>
+
+  <section id="status">
+    <div class="head">
+      <span class="eyebrow">Agreed so far</span>
+      <h2>Confirmed, and still to confirm</h2>
+    </div>
+    <div class="two">
+      <div class="card">
+        <span class="pill p-ok">Confirmed requirements</span>
+        <ul class="list">
+          <li><b>Journey</b><span>Ad → WhatsApp enquiry → patient details → location and requirement → correct information → consultation routing → booking → Google Calendar.</span></li>
+          <li><b>Two consultation types</b><span>Offline for local patients, video for patients from other towns such as Trichy.</span></li>
+          <li><b>Patients see the right information</b><span>Each patient gets the consultation and pricing information that applies to them, and can book.</span></li>
+          <li><b>Staff follow-up</b><span>Non-bookers' details are captured and added to a follow-up list. Staff call, try to recover the appointment, and update the PMS.</span></li>
+          <li><b>Integrations</b><span>WhatsApp, Google Calendar, the clinic PMS and PatientCurve.</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="pill p-tbc">Still to confirm</span>
+        <ul class="list">
+          <li><b>Which towns count as local</b><span>The rule that decides offline or video.</span></li>
+          <li><b>WhatsApp number move</b><span>Moving the number from the Meta AI bot, and reading which ad an enquiry came from.</span></li>
+          <li><b>Video consultation details</b><span>Platform, link and how the patient joins.</span></li>
+          <li><b>PMS connection</b><span>Automatic sync or manual update, depending on the PMS.</span></li>
+          <li><b>All the questions below</b><span>They decide the final scope, ROI and pricing.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="questions">
+    <div class="head">
+      <span class="eyebrow">Before final pricing</span>
+      <h2>Ten questions to answer together</h2>
+      <p>Your answers turn the example figures above into your real numbers and fix the scope.</p>
+    </div>
+    <div class="card">
+      <ol class="qs">
+        <li><b>Which PMS does the clinic use?</b><span>Name and version.</span></li>
+        <li><b>Can the PMS connect to other systems?</b><span>An API, an export, or neither.</span></li>
+        <li><b>What are the consultation fees?</b><span>Offline and video, and any free first consultation.</span></li>
+        <li><b>What is the average treatment value per converted patient?</b><span>Across the treatments the ads promote.</span></li>
+        <li><b>What share of enquiries book an appointment today?</b><span>Even a rough figure helps.</span></li>
+        <li><b>How many enquiries a month are lost today?</b><span>Enquiries that never book.</span></li>
+        <li><b>How does follow-up work today?</b><span>Who calls, when, and how outcomes are recorded.</span></li>
+        <li><b>What are the booking rules?</b><span>Days, hours, slot length, notice period, and separate times for video.</span></li>
+        <li><b>Does the patient need to pay before booking?</b><span>For example, for video consultations, and how they would pay.</span></li>
+        <li><b>Exactly what should the WhatsApp flow collect?</b><span>Every question to ask the patient, and every answer the clinic approves.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="next">
+    <div class="head">
+      <span class="eyebrow">Next steps</span>
+      <h2>How we get to a final proposal</h2>
+    </div>
+    <ol class="next">
+      <li><b>Discovery call</b><span>We go through the ten questions together.</span></li>
+      <li><b>Final scope and ROI</b><span>We recalculate the value with your real numbers and agree the flow and approved answers.</span></li>
+      <li><b>Pricing</b><span>Based on the agreed scope and integrations.</span></li>
+      <li><b>Set up and test</b><span>We build it, then test it with your team before the next campaign goes live.</span></li>
+    </ol>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const EX = { leads: 100, bookRate: 40, consultFee: 500, treatRate: 50, treatValue: 15000, recoverRate: 20 };
+  const EXAMPLE_KEYS = ["bookRate", "consultFee", "treatRate", "treatValue"];
+  const $ = id => document.getElementById(id);
+  const inr = n => "₹" + Math.round(n).toLocaleString("en-IN");
+  const num = id => { const v = parseFloat($(id).value); return isFinite(v) && v >= 0 ? v : 0; };
+  const pct = id => Math.min(num(id), 100) / 100;
+  function calc() {
+    const leads = num("leads");
+    const notBooked = leads * (1 - pct("bookRate"));
+    const perPatient = num("consultFee") + pct("treatRate") * num("treatValue");
+    const recovered = notBooked * pct("recoverRate");
+    $("oNot").textContent = Math.round(notBooked).toLocaleString("en-IN");
+    $("oPer").textContent = inr(perPatient);
+    $("oStake").textContent = inr(notBooked * perPatient);
+    $("oRec").textContent = recovered.toLocaleString("en-IN", { maximumFractionDigits: 1 });
+    $("oGain").textContent = inr(recovered * perPatient);
+    $("oYear").textContent = inr(recovered * perPatient * 12);
+    $("exampleNote").hidden = !EXAMPLE_KEYS.some(k => num(k) === EX[k]);
+  }
+  $("calc").addEventListener("input", calc);
+  $("calc").addEventListener("submit", e => e.preventDefault());
+  $("reset").addEventListener("click", () => { for (const k in EX) $(k).value = EX[k]; calc(); });
+  calc();
+})();
+</script>
