@@ -48,6 +48,20 @@ section { display: grid; gap: 22px; }
 .hero .lede { color: var(--hero-muted); font-size: 1.08rem; }
 .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--hero-muted); font-size: .9rem; }
 .meta b { color: var(--hero-fg); font-weight: 600; }
+.meta s { color: var(--hero-muted); }
+
+/* Pricing */
+.prices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .prices { grid-template-columns: 1fr; } }
+.price { background: var(--surface); border: 1.5px solid var(--teal); border-radius: 20px; padding: 26px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.price .was { color: var(--muted); font: 600 1.05rem var(--display); text-decoration: line-through; font-variant-numeric: tabular-nums; }
+.price .now { font: 800 clamp(2.2rem, 5vw, 3rem)/1 var(--display); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.price .now small { font: 600 1rem var(--body); color: var(--muted); letter-spacing: 0; }
+.price .save { justify-self: start; }
+.incl { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.incl li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; font-size: .95rem; }
+.incl li::before { content: "✓"; color: var(--teal); font-weight: 700; }
+.terms { color: var(--muted); font-size: .9rem; display: grid; gap: 4px; }
 
 /* Facts */
 .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
@@ -139,8 +153,8 @@ ol.qs li span { color: var(--muted); font-size: .92rem; display: block; }
     <h1>Every ad enquiry managed until it becomes an <em>appointment.</em></h1>
     <p class="lede">PatientCurve runs your clinic's enquiry-to-appointment workflow. It answers from information you approve, qualifies each enquiry, sends it to the right consultation, books it into your calendar, and gives your team a follow-up list for everyone who doesn't book.</p>
     <div class="meta">
-      <span>Status <b>Draft for discussion</b></span>
-      <span>Pricing <b>After the open questions are answered</b></span>
+      <span>Setup <b>₹5,000</b> <s>₹7,500</s></span>
+      <span>Monthly <b>₹2,999</b> <s>₹4,999</s></span>
       <span>Date <b>October 2026</b></span>
     </div>
   </header>
@@ -167,8 +181,8 @@ ol.qs li span { color: var(--muted); font-size: .92rem; display: block; }
     </div>
     <div class="funnel" aria-label="Enquiry funnel">
       <div class="bar b1"><b>Enquiries from ads</b><span class="v">~100 / month</span></div>
-      <div class="bar b2"><b>Book an appointment</b><span class="pill p-tbc">To confirm</span></div>
-      <div class="bar b3"><b>Enquire but don't book</b><span class="pill p-tbc">To confirm</span></div>
+      <div class="bar b2"><b>Book an appointment</b><span class="pill p-tbc">Measured from day one</span></div>
+      <div class="bar b3"><b>Enquire but don't book</b><span class="pill p-tbc">Measured from day one</span></div>
       <div class="bar b4"><b>Revenue that never arrives</b><span class="pill p-loss">Possible loss</span></div>
     </div>
     <div class="leaks">
@@ -183,7 +197,7 @@ ol.qs li span { color: var(--muted); font-size: .92rem; display: block; }
     <div class="head">
       <span class="eyebrow">What the gap may be worth</span>
       <h2>Put your own numbers in</h2>
-      <p>Only the 100 enquiries a month is confirmed. Every other figure starts as an example, so replace it with your clinic's real number. The results update as you type.</p>
+      <p>Only the 100 enquiries a month comes from you. The amber figures are examples, so replace them with your clinic's real numbers. The results update as you type.</p>
     </div>
     <div class="calc">
       <form class="card" id="calc" novalidate>
@@ -224,8 +238,8 @@ ol.qs li span { color: var(--muted); font-size: .92rem; display: block; }
           <div class="row"><span>Patients won back each month</span><b id="oRec">–</b></div>
           <div class="row big gain"><span>Value of those patients each month</span><b id="oGain">–</b></div>
           <div class="row gain"><span>The same, over 12 months</span><b id="oYear">–</b></div>
+          <div class="row big gain"><span>Patients a month that cover PatientCurve's ₹2,999</span><b id="oBreak">–</b></div>
         </div>
-        <p class="formula">Once pricing is agreed, we'll add one line: how many won-back patients a month cover the cost of PatientCurve.</p>
       </div>
     </div>
   </section>
@@ -283,7 +297,7 @@ ol.qs li span { color: var(--muted); font-size: .92rem; display: block; }
     </div>
     <div class="head" style="gap: 10px">
       <h3>The conversion report you'd see each month</h3>
-      <p class="formula">Layout only, with no real data. Showing results per campaign depends on reading the ad source from WhatsApp, which is still to confirm.</p>
+      <p class="formula">Layout only, with no real data. Figures fill in from your first month live.</p>
     </div>
     <div class="tablewrap">
       <table class="report">
@@ -303,21 +317,62 @@ ol.qs li span { color: var(--muted); font-size: .92rem; display: block; }
       <h2>Works with what the clinic already uses</h2>
     </div>
     <div class="integ">
-      <div class="card"><span class="pill p-ok">Required</span><h3>WhatsApp</h3><p class="formula">Where every enquiry starts. Moving your number from the current Meta AI bot is still to confirm.</p></div>
-      <div class="card"><span class="pill p-ok">Required</span><h3>Google Calendar</h3><p class="formula">Every booking lands here. To confirm: whether offline and video consultations use separate calendars, and how video links are sent.</p></div>
-      <div class="card"><span class="pill p-tbc">Depends on PMS</span><h3>Clinic PMS</h3><p class="formula">If your PMS can connect, patient updates can sync automatically. If not, staff update it as today, and PatientCurve tracks the follow-up.</p></div>
+      <div class="card"><span class="pill p-ok">Required</span><h3>WhatsApp</h3><p class="formula">Where every enquiry starts, on your clinic's number.</p></div>
+      <div class="card"><span class="pill p-ok">Required</span><h3>Google Calendar</h3><p class="formula">Every offline and video booking lands in your calendar.</p></div>
+      <div class="card"><span class="pill p-ok">Required</span><h3>Clinic PMS</h3><p class="formula">Staff update the PMS after each call, as your workflow requires, and PatientCurve tracks every follow-up until it's closed. If your PMS can connect to other systems, automatic sync can be added later.</p></div>
       <div class="card"><span class="pill p-ok">Core</span><h3>PatientCurve</h3><p class="formula">Connects the three. Holds the enquiry, the routing, the follow-up list and the report.</p></div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="head">
+      <span class="eyebrow">Investment</span>
+      <h2>One setup fee, then <em>one monthly fee</em></h2>
+    </div>
+    <div class="prices">
+      <div class="price">
+        <span class="eyebrow">One-time setup</span>
+        <span class="was">₹7,500</span>
+        <div class="now">₹5,000</div>
+        <span class="pill p-ok save">You save ₹2,500</span>
+        <ul class="incl">
+          <li>WhatsApp enquiry flow: patient details, location and requirement</li>
+          <li>Your approved answers: consultation types, fees, timings, address</li>
+          <li>Offline and video consultation routing</li>
+          <li>Booking into Google Calendar</li>
+          <li>Staff follow-up list and staff chat</li>
+          <li>Testing with your team before go-live</li>
+        </ul>
+      </div>
+      <div class="price">
+        <span class="eyebrow">Monthly</span>
+        <span class="was">₹4,999 / month</span>
+        <div class="now">₹2,999 <small>/ month</small></div>
+        <span class="pill p-ok save">You save ₹2,000 every month</span>
+        <ul class="incl">
+          <li>Every enquiry answered, qualified and routed</li>
+          <li>Appointment booking and reminders</li>
+          <li>Follow-up list for every patient who doesn't book</li>
+          <li>Monthly enquiry-to-appointment report</li>
+          <li>Updates to your approved answers when fees or timings change</li>
+          <li>Support for you and your team</li>
+        </ul>
+      </div>
+    </div>
+    <div class="terms">
+      <span>WhatsApp message charges set by Meta are not included.</span>
+      <span>Automatic PMS sync, if your PMS supports it, is quoted separately.</span>
     </div>
   </section>
 
   <section id="status">
     <div class="head">
-      <span class="eyebrow">Agreed so far</span>
-      <h2>Confirmed, and still to confirm</h2>
+      <span class="eyebrow">Scope</span>
+      <h2>What's agreed, and what we set up together</h2>
     </div>
     <div class="two">
       <div class="card">
-        <span class="pill p-ok">Confirmed requirements</span>
+        <span class="pill p-ok">Your requirements</span>
         <ul class="list">
           <li><b>Journey</b><span>Ad → WhatsApp enquiry → patient details → location and requirement → correct information → consultation routing → booking → Google Calendar.</span></li>
           <li><b>Two consultation types</b><span>Offline for local patients, video for patients from other towns such as Trichy.</span></li>
@@ -327,50 +382,29 @@ ol.qs li span { color: var(--muted); font-size: .92rem; display: block; }
         </ul>
       </div>
       <div class="card">
-        <span class="pill p-tbc">Still to confirm</span>
+        <span class="pill p-tbc">Set up with you during onboarding</span>
         <ul class="list">
+          <li><b>Consultation fees and timings</b><span>For offline and video consultations.</span></li>
           <li><b>Which towns count as local</b><span>The rule that decides offline or video.</span></li>
-          <li><b>WhatsApp number move</b><span>Moving the number from the Meta AI bot, and reading which ad an enquiry came from.</span></li>
-          <li><b>Video consultation details</b><span>Platform, link and how the patient joins.</span></li>
-          <li><b>PMS connection</b><span>Automatic sync or manual update, depending on the PMS.</span></li>
-          <li><b>All the questions below</b><span>They decide the final scope, ROI and pricing.</span></li>
+          <li><b>Booking rules</b><span>Days, hours, slot length and notice period.</span></li>
+          <li><b>Approved answers</b><span>Exactly what the WhatsApp flow asks and tells patients.</span></li>
+          <li><b>Video consultation details</b><span>How the patient receives the link and joins.</span></li>
+          <li><b>WhatsApp number</b><span>Moving your number from the current Meta AI bot.</span></li>
         </ul>
       </div>
-    </div>
-  </section>
-
-  <section id="questions">
-    <div class="head">
-      <span class="eyebrow">Before final pricing</span>
-      <h2>Ten questions to answer together</h2>
-      <p>Your answers turn the example figures above into your real numbers and fix the scope.</p>
-    </div>
-    <div class="card">
-      <ol class="qs">
-        <li><b>Which PMS does the clinic use?</b><span>Name and version.</span></li>
-        <li><b>Can the PMS connect to other systems?</b><span>An API, an export, or neither.</span></li>
-        <li><b>What are the consultation fees?</b><span>Offline and video, and any free first consultation.</span></li>
-        <li><b>What is the average treatment value per converted patient?</b><span>Across the treatments the ads promote.</span></li>
-        <li><b>What share of enquiries book an appointment today?</b><span>Even a rough figure helps.</span></li>
-        <li><b>How many enquiries a month are lost today?</b><span>Enquiries that never book.</span></li>
-        <li><b>How does follow-up work today?</b><span>Who calls, when, and how outcomes are recorded.</span></li>
-        <li><b>What are the booking rules?</b><span>Days, hours, slot length, notice period, and separate times for video.</span></li>
-        <li><b>Does the patient need to pay before booking?</b><span>For example, for video consultations, and how they would pay.</span></li>
-        <li><b>Exactly what should the WhatsApp flow collect?</b><span>Every question to ask the patient, and every answer the clinic approves.</span></li>
-      </ol>
     </div>
   </section>
 
   <section id="next">
     <div class="head">
       <span class="eyebrow">Next steps</span>
-      <h2>How we get to a final proposal</h2>
+      <h2>From yes to your first booked enquiry</h2>
     </div>
     <ol class="next">
-      <li><b>Discovery call</b><span>We go through the ten questions together.</span></li>
-      <li><b>Final scope and ROI</b><span>We recalculate the value with your real numbers and agree the flow and approved answers.</span></li>
-      <li><b>Pricing</b><span>Based on the agreed scope and integrations.</span></li>
-      <li><b>Set up and test</b><span>We build it, then test it with your team before the next campaign goes live.</span></li>
+      <li><b>Approve the proposal</b><span>Setup fee of ₹5,000 to begin.</span></li>
+      <li><b>Onboarding call</b><span>We agree your fees, routing, booking rules and approved answers.</span></li>
+      <li><b>Set up and test</b><span>We build it and test it with your team.</span></li>
+      <li><b>Go live</b><span>Your next campaign's enquiries run through PatientCurve, and the monthly report starts.</span></li>
     </ol>
   </section>
 
@@ -395,6 +429,7 @@ ol.qs li span { color: var(--muted); font-size: .92rem; display: block; }
     $("oRec").textContent = recovered.toLocaleString("en-IN", { maximumFractionDigits: 1 });
     $("oGain").textContent = inr(recovered * perPatient);
     $("oYear").textContent = inr(recovered * perPatient * 12);
+    $("oBreak").textContent = perPatient > 0 ? Math.ceil(2999 / perPatient).toLocaleString("en-IN") : "–";
     $("exampleNote").hidden = !EXAMPLE_KEYS.some(k => num(k) === EX[k]);
   }
   $("calc").addEventListener("input", calc);
