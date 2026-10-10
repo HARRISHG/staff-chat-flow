@@ -1,4 +1,4 @@
-// Patientcurve lite proposal: 2 slides. 1) problem and solution, 2) pricing and next steps.
+// Patientcurve proposal for Dr. Aishwarya Arun, Kannan Prime Dental: title page + 2 pages.
 // Brand guidelines v1.0: jade leads, deep for heroes, tint panels, surface page, rose only as one dot. Arial (Office fallback).
 const fs = require("fs");
 const path = require("path");
@@ -64,7 +64,7 @@ const iconSvg = (Comp, color) => ReactDOMServer.renderToStaticMarkup(React.creat
 
   const TOTAL = 2;
   const DOCTOR = "Dr. Aishwarya Arun";
-  const CLINIC = "[Clinic name]"; // placeholder: replace before sending
+  const CLINIC = "Kannan Prime Dental";
   const DATE = "10 Oct 2026";
   const bullets = (items, o = {}) => items.map((t, j) => ({ text: t, options: { bullet: { indent: 15 }, breakLine: j < items.length - 1, paraSpaceAfter: o.ps ?? 4 } }));
   const label = (s, t, x, y, w, color = H.jade) => T(s, t, { x, y, w, h: 0.26, fontSize: 10.5, bold: true, color, charSpacing: 1.5 });
@@ -75,10 +75,29 @@ const iconSvg = (Comp, color) => ReactDOMServer.renderToStaticMarkup(React.creat
     T(s, kicker, { x: X0, y: 0.38, w: 9, h: 0.28, fontSize: 11, bold: true, color: H.jade, charSpacing: 1.5 });
     T(s, title, { x: X0, y: 0.68, w: 10, h: 0.6, fontSize: 28, bold: true });
     hline(s, X0, 6.95, CW);
-    T(s, [{ text: "Prepared for  ", options: { bold: true } }, { text: `${DOCTOR}  ·  ` }, { text: CLINIC, options: { color: H.warning, bold: true } }, { text: `  ·  ${DATE}` }],
+    T(s, [{ text: "Prepared for  ", options: { bold: true } }, { text: `${DOCTOR}  ·  ` }, { text: CLINIC }, { text: `  ·  ${DATE}` }],
       { x: X0, y: 7.04, w: 9, h: 0.26, fontSize: 10, color: H.muted, valign: "middle" });
     T(s, `Patientcurve proposal  ·  ${no} / ${TOTAL}`, { x: 9.2, y: 7.04, w: W - X0 - 9.2, h: 0.26, fontSize: 10, color: H.muted, align: "right", valign: "middle" });
     return s;
+  }
+
+  // ---------- Title page ----------
+  {
+    const s = pres.addSlide();
+    s.background = { color: H.deep };
+    box(s, 8.73, 0, W - 8.73, 7.5, H.jade);
+    s.addImage({ data: curve, x: 9.05, y: 1.35, w: 3.95, h: 3.95 });
+    s.addImage({ data: logoDark, x: 0.8, y: 0.8, w: 2.6, h: 2.6 / LOGO_AR });
+    T(s, "PATIENT JOURNEY AUTOMATION PROPOSAL", { x: 0.8, y: 2.0, w: 7.6, h: 0.35, fontSize: 12, bold: true, color: H.jadeLight, charSpacing: 1.5 });
+    T(s, CLINIC, { x: 0.8, y: 2.45, w: 7.6, h: 0.95, fontSize: 40, bold: true, color: H.white });
+    T(s, "Every enquiry deserves a next step.", { x: 0.8, y: 3.45, w: 7.4, h: 0.5, fontSize: 18, color: H.onDeep });
+    hline(s, 0.8, 4.45, 7.3, H.deepLine, 1);
+    [["Prepared for", DOCTOR], ["Clinic", CLINIC], ["Date", DATE]].forEach(([k, v], i) => {
+      const x = 0.8 + i * 2.5;
+      T(s, k.toUpperCase(), { x, y: 4.7, w: 2.35, h: 0.26, fontSize: 10, bold: true, color: H.jadeLight, charSpacing: 1.5 });
+      T(s, v, { x, y: 5.0, w: 2.35, h: 0.6, fontSize: 15, bold: true, color: H.white });
+    });
+    T(s, "Prepared by Patientcurve  ·  patientcurve.com", { x: 0.8, y: 6.55, w: 7.4, h: 0.35, fontSize: 12, color: H.onDeep });
   }
 
   // ---------- Page 1: problem and solution ----------
@@ -87,7 +106,7 @@ const iconSvg = (Comp, color) => ReactDOMServer.renderToStaticMarkup(React.creat
     const mx = 7.9, mw = W - X0 - mx;
     T(s, [
       { text: "Prepared for ", options: { color: H.muted } }, { text: DOCTOR, options: { bold: true, breakLine: true } },
-      { text: CLINIC, options: { bold: true, color: H.warning } }, { text: `   ·   ${DATE}`, options: { color: H.muted } },
+      { text: CLINIC, options: { bold: true } }, { text: `   ·   ${DATE}`, options: { color: H.muted } },
     ], { x: mx, y: 0.86, w: mw, h: 0.52, fontSize: 12.5, align: "right" });
     // Problem
     card(s, X0, 1.55, 3.95, 2.75, { fill: H.deep, noLine: true });
