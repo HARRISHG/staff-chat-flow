@@ -10,3 +10,9 @@ Rebuild (needs `pptxgenjs`, `react`, `react-dom`, `react-icons`, `sharp`):
 npm install pptxgenjs react react-dom react-icons sharp
 node build-overview.js ../Patientcurve-Overview.pptx
 ```
+
+## Lite proposal (2 slides)
+
+```bash
+node build-lite.js ../Patientcurve-Proposal-Lite.pptx
+```
